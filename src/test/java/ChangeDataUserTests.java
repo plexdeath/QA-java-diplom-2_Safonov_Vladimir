@@ -38,18 +38,18 @@ public class ChangeDataUserTests {
     @Step("Изменить данные пользователя с авторизацией")
     @Owner("Vladimir Safonov_QA_Automation_Engeener_Group45_Yandex_Praktikum")
     public void changeUserWithAutorizationTest() {
-        Response updateResponse =
+        Response changeUserWithAutorizationTest =
                 given()
                         .header("Content-type", "application/json")
                         .header("authorization", accessToken)
                         .body(GeneratorsAndSetup.createUpdatedUserData()) //передаем коллекцию
                         .when()
                         .patch(GeneratorsAndSetup.USER_API);
-        updateResponse.then()
+        changeUserWithAutorizationTest.then()
                 .assertThat()
                 .statusCode(200);
         assertThat("Проверить что запрос на изменение данных выполнился успешно"
-                ,updateResponse.getBody().asString(),
+                ,changeUserWithAutorizationTest.getBody().asString(),
                 CoreMatchers.containsString(GeneratorsAndSetup.generatedEmail)); //проверяем что ответ содержит наш новый сгенерированный email
     }
     @Test
@@ -58,17 +58,17 @@ public class ChangeDataUserTests {
     @Step("Изменить данные пользователя без авторизации")
     @Owner("Vladimir Safonov_QA_Automation_Engeener_Group45_Yandex_Praktikum")
     public void changeUserWithoutAutorizationTest() {
-        Response updateResponse =
+        Response changeUserWithoutAutorizationTest =
                 given()
                         .header("Content-type", "application/json")
                         .body(GeneratorsAndSetup.createUpdatedUserData()) //передаем коллекцию
                         .when()
                         .patch(GeneratorsAndSetup.USER_API);
-        updateResponse.then()
+        changeUserWithoutAutorizationTest.then()
                 .assertThat()
                 .statusCode(401);
         assertThat("Проверить что без авторизации не изменить данные"
-                ,updateResponse.getBody().asString(),
+                ,changeUserWithoutAutorizationTest.getBody().asString(),
                 CoreMatchers.containsString("You should be authorised")); //Проверить что без авторизации не изменить данные
     }
 }

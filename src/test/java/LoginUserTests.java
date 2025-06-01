@@ -52,18 +52,18 @@ public class LoginUserTests  {
     @Owner("Vladimir Safonov_QA_Automation_Engeener_Group45_Yandex_Praktikum")
     public void loginWrongEmailSAndPassword() {
         testUser = GeneratorsAndSetup.createRandomUser();
-        Response LoginUser =
+        Response loginWrongEmailSAndPassword =
                 given()
                         .header("Content-type", "application/json")
                         .and()
                         .body(testUser)
                         .when()
                         .post(GeneratorsAndSetup.LOGIN_API);
-        LoginUser.then()
+        loginWrongEmailSAndPassword.then()
                 .assertThat()
                 .statusCode(401);
         assertThat("Проверка что email и пароль не правильные"
-                ,LoginUser.getBody().asString(),
+                ,loginWrongEmailSAndPassword.getBody().asString(),
                 CoreMatchers.containsString("email or password are incorrect"));
     }
 }

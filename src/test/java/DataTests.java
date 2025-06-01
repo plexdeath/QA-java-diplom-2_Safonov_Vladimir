@@ -12,16 +12,16 @@ public class DataTests {
     private static final String INGREDIENTS_API = "https://stellarburgers.nomoreparties.site/api/ingredients";
     @Step("Добавить пользователя и вернуть accessToken")
     public String registerAndGetAccessToken(CreateUser user) { //здесь мы регистрируемся и получаем accessToken
-        Response registerResponse = given()
+        Response registerAndGetAccessToken = given()
                 .header("Content-type", "application/json")
                 .body(user)
                 .when()
                 .post(GeneratorsAndSetup.REGISTER_API);
-        registerResponse.then().statusCode(200);
+        registerAndGetAccessToken.then().statusCode(200);
                               assertThat("Проверка что уникальный пользователь успешно создался"
-                              ,registerResponse.getBody().asString(),
+                              ,registerAndGetAccessToken.getBody().asString(),
                                      CoreMatchers.containsString(user.getName()));
-        return registerResponse.then()
+        return registerAndGetAccessToken.then()
                 .extract()
                 .path("accessToken");
     }
@@ -37,26 +37,26 @@ public class DataTests {
         }
     @Step("Авторизоваться")
     public Response loginUser(CreateUser user) { //Авторизоваться
-        Response loginResponse = given()
+        Response loginUser = given()
                 .header("Content-type", "application/json")
                 .body(user)
                 .when()
                 .post(GeneratorsAndSetup.LOGIN_API);
-        loginResponse.then().statusCode(200);
+        loginUser.then().statusCode(200);
         assertThat("Проверка, что пользователь авторизовался",
-                loginResponse.getBody().asString(),
+                loginUser.getBody().asString(),
                 CoreMatchers.containsString(user.getName()));
-        return loginResponse;
+        return loginUser;
     }
 
         @Step("Получить первые два ингредиента по _id")
         public List<String> getFirstTwoIngredientIds() {
-            Response response = given()
+            Response getFirstTwoIngredientIds = given()
                     .header("Content-type", "application/json")
                     .when()
                     .get(INGREDIENTS_API);
-            response.then().statusCode(200);
-            List<String> allIds = response.jsonPath().getList("data._id", String.class);
+            getFirstTwoIngredientIds.then().statusCode(200);
+            List<String> allIds = getFirstTwoIngredientIds.jsonPath().getList("data._id", String.class);
             return allIds.subList(0, Math.min(2, allIds.size()));
         }
     }

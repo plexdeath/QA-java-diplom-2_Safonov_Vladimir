@@ -53,18 +53,18 @@ public class CreateUsersTests {
     @Owner("Vladimir Safonov_QA_Automation_Engeener_Group45_Yandex_Praktikum")
     public void createUserRegisteredTest() {
 
-        Response createUserRegistered =
+        Response createUserRegisteredTest =
                 given()
                         .header("Content-type", "application/json")
                         .and()
                         .body(testUser)
                         .when()
                         .post(GeneratorsAndSetup.REGISTER_API);
-        createUserRegistered.then()
+        createUserRegisteredTest.then()
                 .assertThat()
                 .statusCode(403);
         assertThat("Проверка что повторно нельзя создать пользователя который уже зарегистрирован"
-                ,createUserRegistered.getBody().asString(),
+                ,createUserRegisteredTest.getBody().asString(),
                 CoreMatchers.containsString("User already exists")); //Здесь проверили сообщение что пользователь уже был зарегестрирован
     }
 
@@ -77,18 +77,18 @@ public class CreateUsersTests {
         shouldGenerateTestUser = false;//запрещаем создавать уникального пользователя
         shouldDeleteUser = false; //запрещаем удалять уникального пользователя
         CreateUser createUserWithoutPassword = GeneratorsAndSetup.createUserWithoutPassword();
-        Response createUserWithoutPass =
+        Response createUserWithoutPasswordTest =
                 given()
                         .header("Content-type", "application/json")
                         .and()
                         .body(createUserWithoutPassword)
                         .when()
                         .post(GeneratorsAndSetup.REGISTER_API);
-        createUserWithoutPass.then()
+        createUserWithoutPasswordTest.then()
                 .assertThat()
                 .statusCode(403);
         assertThat("Проверка если создать пользователя без обязательного поля пароль"
-                ,createUserWithoutPass.getBody().asString(),
+                ,createUserWithoutPasswordTest.getBody().asString(),
                 CoreMatchers.containsString("Email, password and name are required fields")); //Здесь проверили сообщение что отсутствует обязательное поле
     }
 }

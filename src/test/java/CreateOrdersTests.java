@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CreateOrdersTests {
@@ -73,7 +73,6 @@ public class CreateOrdersTests {
                 given()
                         .header("Content-type", "application/json")
                         .post(GeneratorsAndSetup.ORDER_API);
-        System.out.println(createOrderWithoutAutorization.getBody().asString());
         createOrderWithoutAutorization.then()
                 .assertThat()
                 .statusCode(400);
@@ -144,7 +143,7 @@ public class CreateOrdersTests {
         createOrderWrongHash.then()
                 .assertThat()
                 .statusCode(400);
-        assertThat("Проверить что запрос на изменение данных выполнился успешно"
+        assertThat("Проверяем ошибку после добавления неверных хэшей"
                 ,createOrderWrongHash.getBody().asString(),
                 CoreMatchers.containsString("One or more ids provided are incorrect")); //проверяем ошибку после добавления неверных хэшей
     }
@@ -172,7 +171,8 @@ public class CreateOrdersTests {
                 .get(GeneratorsAndSetup.ORDER_API);
         getOrderUserAuthorizeResponse.then()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(200)
+                .body("orders._id", everyItem(notNullValue())); // проверяем что наши _id не пустые
 
     }
     @Test
@@ -194,7 +194,6 @@ public class CreateOrdersTests {
                 given()
                         .header("Content-type", "application/json")
                         .get(GeneratorsAndSetup.ORDER_API);
-        System.out.println(getOrderUserNoAuthorizeResponse.getBody().asString());
         getOrderUserNoAuthorizeResponse.then()
                 .assertThat()
                 .statusCode(401);
